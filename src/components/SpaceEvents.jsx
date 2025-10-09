@@ -7,6 +7,11 @@ const SpaceEvents = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [eventInfo, setEventInfo] = useState(null);
   const sectionRef = useRef(null);
+  const dateInputRef = useRef(null);
+  const exploreButtonRef = useRef(null);
+  const eventDisplayRef = useRef(null);
+  const quickAccessRef = useRef(null);
+  const quickAccessButtonsRef = useRef([]);
 
   const spaceEvents = {
     '1969-07-20': {
@@ -65,7 +70,39 @@ const SpaceEvents = () => {
         }
       });
     }
+
+    // Animate input and button
+    if (dateInputRef.current && exploreButtonRef.current) {
+      gsap.from([dateInputRef.current, exploreButtonRef.current], {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'power2.out',
+        delay: 0.5
+      });
+    }
+
+    // Animate quick access buttons
+    gsap.from(quickAccessButtonsRef.current, {
+      opacity: 0,
+      x: -20,
+      duration: 0.6,
+      stagger: 0.05,
+      ease: 'power1.out',
+      delay: 0.8
+    });
   }, []);
+
+  useEffect(() => {
+    // Animate event display when eventInfo changes
+    if (eventInfo && eventDisplayRef.current) {
+      gsap.fromTo(eventDisplayRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }
+      );
+    }
+  }, [eventInfo]);
 
   const handleDateSubmit = () => {
     if (selectedDate && spaceEvents[selectedDate]) {
@@ -89,27 +126,32 @@ const SpaceEvents = () => {
             <Calendar className="w-10 h-10 text-cyan-400" />
             <h2 className="text-5xl font-bold text-white">Historic Space Events</h2>
           </div>
-          <p className="text-gray-400 text-lg">Journey through the timeline of space exploration</p>
+          <p className="text-yellow-400 text-lg">Journey through the timeline of space exploration</p>
         </div>
 
         <div className="bg-gradient-to-br from-blue-900/40 to-purple-900/40 backdrop-blur-xl rounded-3xl p-8 border border-cyan-500/30 shadow-2xl">
           <div className="flex flex-col md:flex-row gap-4 mb-8">
             <input
+              ref={dateInputRef}
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
               className="flex-1 px-6 py-4 bg-black/50 border border-cyan-500/50 rounded-xl text-white focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 text-lg"
             />
             <button
+              ref={exploreButtonRef}
               onClick={handleDateSubmit}
-              className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 flex items-center justify-center gap-2"
+              className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105"
             >
               Explore <ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
           {eventInfo && (
-            <div className="bg-black/40 rounded-2xl p-8 border border-cyan-500/20 mb-8 animate-fadeIn">
+            <div 
+              ref={eventDisplayRef}
+              className="bg-black/40 rounded-2xl p-8 border border-cyan-500/20 mb-8"
+            >
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="text-7xl">{eventInfo.icon}</div>
                 <div className="flex-1">
@@ -127,11 +169,12 @@ const SpaceEvents = () => {
             </div>
           )}
 
-          <div className="pt-6 border-t border-cyan-500/20">
+          <div ref={quickAccessRef} className="pt-6 border-t border-cyan-500/20">
             <p className="text-sm text-gray-400 mb-4">Quick access to historic dates:</p>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              {Object.keys(spaceEvents).map(date => (
+              {Object.keys(spaceEvents).map((date, index) => (
                 <button
+                  ref={(el) => (quickAccessButtonsRef.current[index] = el)}
                   key={date}
                   onClick={() => {
                     setSelectedDate(date);
