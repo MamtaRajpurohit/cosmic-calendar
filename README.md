@@ -91,7 +91,7 @@ Start the backend server:
 npm start
 ```
 
-Backend runs at 👉 **[http://localhost:5000](http://localhost:5000)**
+Backend runs at 👉 **http://localhost:3001**
 
 ---
 
