@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, RotateCcw, Rocket, FlaskConical, RefreshCw, Loader2, Flag } from "lucide-react";
 
-const API_BASE_URL = "http://localhost:3001/api";
+const API_BASE_URL = "https://cosmic-calendar.onrender.com/api";
 
 export const WowFactsSection = () => {
   const [isFlipped, setIsFlipped] = useState(false);
