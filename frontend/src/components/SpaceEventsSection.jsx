@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { Calendar, Sparkles, Search, Loader2, Flag } from "lucide-react";
 
-const API_BASE_URL = "http://localhost:3001/api";
+const API_BASE_URL = "https://cosmic-calendar.onrender.com/api";
 
 export const SpaceEventsSection = () => {
   const [selectedDate, setSelectedDate] = useState("");
